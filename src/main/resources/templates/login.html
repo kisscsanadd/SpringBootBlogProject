@@ -1,0 +1,24 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/header :: header (title='Login')"></div>
+<body>
+
+<div class="container">
+    <!--/*@thymesVar id="blogUser" type="hu.suaf.blog.model.BlogUser"*/-->
+    <p class="validationError" th:if="${loginError}">Wrong username or password</p>
+    <form  th:action="@{/login}" th:object="${blogUser}" method="post" novalidate>
+        <div class="form-group">
+            <label for="username">Username or Email</label>
+            <input type="text" class="form-control" id="username" th:field="*{username}">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" th:field="*{password}">
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+        <a th:href="@{/register}" class="btn btn-secondary">Register</a>
+    </form>
+</div>
+<footer th:replace="/fragments/footer :: footer"></footer>
+</body>
+</html>

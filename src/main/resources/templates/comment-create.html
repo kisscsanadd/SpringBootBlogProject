@@ -1,0 +1,21 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/header :: header (title='Write Comment')"></div>
+<body>
+
+<div th:replace="fragments/menu :: menu (current='List')"></div>
+
+
+<div class="container">
+    <!--/*@thymesVar id="comment" type="hu.suaf.blog.model.BlogPostComment"*/-->
+    <form action="#" th:action="${comment.id} == null ? @{/comment/create/{postid}(postid=${blogpost.id})} : @{/comment/edit/{postid}/{id}/(id=${comment.id},postid=${blogpost.id})}" th:object="${comment}" method="post" novalidate>
+        <div class="form-group">
+            <label for="body">Text</label>
+            <textarea rows="5" class="form-control" id="body" th:field="*{text}"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="${comment.id != null ? 'Save' : 'Submit'}">Submit</button>
+    </form>
+</div>
+<footer th:replace="/fragments/footer :: footer"></footer>
+</body>
+</html>

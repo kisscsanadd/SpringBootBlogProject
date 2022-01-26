@@ -1,0 +1,77 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/header :: header (title='Create Post')"></div>
+<body>
+
+<div th:replace="fragments/menu :: menu (current='Create')"></div>
+
+
+<div class="container">
+    <!--/*@thymesVar id="blogpost" type="hu.suaf.blog.model.BlogPost"*/-->
+    <form action="#" th:action="@{/search/}" th:object="${searchBody}"  method="post" >
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" name="title" class="form-control"  th:field="*{title}" id="title" placeholder="Filter by post title">
+        </div>
+        <div class="form-group">
+            <label for="author">Author</label>
+            <input type="text" name="author" class="form-control"  th:field="*{author}" id="author" placeholder="Filter by post author">
+        </div>
+        <div class="form-group">
+            <label for="text">Text</label>
+            <input type="text" name="text" class="form-control"  th:field="*{text}" id="text" placeholder="Filter by post text">
+        </div>
+        <div class="form-group">
+            <label for="beginDate">Start date:</label>
+            <div class="input-group date" data-date-format="dd/mm/yyyy">
+                <input class="form-control" type="text" th:field="*{beginDate}" id="beginDate" placeholder="dd/mm/yyyy" />
+                <div class="input-group-addon input-group-append">
+                    <span class="input-group-text"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="endDate">End date:</label>
+            <div class="input-group date" data-date-format="dd/mm/yyyy">
+                <input class="form-control" type="text" th:field="*{endDate}" id="endDate" placeholder="dd/mm/yyyy" />
+                <div class="input-group-addon input-group-append">
+                    <span class="input-group-text"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a th:href="@{/advanced-search}">
+                <button type="button" class="btn btn-primary">Reset</button>
+            </a>
+        </div>
+    </form>
+</div>
+<script>
+		$('.input-group.date').datepicker({
+			format: 'dd/mm/yyyy',
+			weekStart: 1,
+			autoclose: true
+		});
+	</script>
+<footer th:replace="/fragments/footer :: footer"></footer>
+</body>
+</html>
+<script>
+    $.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
+        icons: {
+            time: 'far fa-clock',
+            date: 'far fa-calendar',
+            up: 'fas fa-arrow-up',
+            down: 'fas fa-arrow-down',
+            previous: 'fas fa-chevron-left',
+            next: 'fas fa-chevron-right',
+            today: 'far fa-calendar-check-o',
+            clear: 'far fa-trash',
+            close: 'far fa-times'
+        } });
+
+    $('#datetimepicker1').datetimepicker({
+        format: 'DD/MM/YYYY h:mm A'
+    });
+</script>

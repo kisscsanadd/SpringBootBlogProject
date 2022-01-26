@@ -1,0 +1,37 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<div th:replace="fragments/header :: header (title='Profile')"></div>
+<body>
+
+<div th:replace="fragments/menu :: menu (current='Profile')"></div>
+
+
+<div class="container">
+    <!--/*@thymesVar id="currentUser" type="hu.suaf.blog.model.BlogUser"*/-->
+    <form  th:action="@{/users/edit/{id}(id=${currentUser.id})}" th:object="${currentUser}" method="post" novalidate>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" th:field="*{username}">
+            <span class="validationError" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" th:field="*{email}">
+            <span class="validationError" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" th:field="*{password}">
+            <span class="validationError" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+        </div>
+        <div sec:authorize="hasAnyAuthority('ADMIN')" class="form-group">
+            <label for="enabled">Enabled</label>
+            <input type="checkbox" id="enabled" name="enabled" th:checked="*{enabled}"/>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Modify</button>
+    </form>
+</div>
+<footer th:replace="/fragments/footer :: footer"></footer>
+</body>
+</html>

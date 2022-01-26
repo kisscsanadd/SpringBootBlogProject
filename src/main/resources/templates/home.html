@@ -1,0 +1,98 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<div th:replace="fragments/header :: header (title='List Posts')"></div>
+<body>
+
+<div th:replace="fragments/menu :: menu (current='List')"></div>
+
+<form th:action="@{/}" method="get" class="form-group bg-light-form" >
+    <input type="text" name="title" class="form-control"  th:value="${title}" id="title" placeholder="Find by post title">
+    <div>
+        <button type="submit" class="btn btn-info">Search</button>
+        <a th:href="@{/advanced-search}">
+            <button type="button" class="btn btn-info">Advanced Search</button>
+        </a>
+        <button type="button" class="btn btn-info" onclick="clearSearch()">Reset</button>
+    </div>
+</form>
+<form th:if="${ascending} != null and ${ascending} == true" th:action="@{/descending}" method="get" class="form-group bg-light-form" >
+    <div>
+        <button type="submit" class="btn btn-info">Sort by date: Descending</button>
+    </div>
+</form>
+<form th:if="${ascending} == null or ${ascending} == false" th:action="@{/ascending}" method="get" class="form-group bg-light-form" >
+    <div>
+        <button type="submit" class="btn btn-info">Sort by date: Ascending</button>
+    </div>
+</form>
+
+<div class="container" th:each="post : ${blogposts}">
+    <div class="jumbotron post" style="margin-bottom: 0; padding : 0;" >
+        <div class="panel-heading">
+            <h1><p th:text="${post.title}">Title</p></h1>
+        </div>
+        <h3 class="panel-body" th:text="${post.text}">Text</h3>
+        <div th:if="${post.user} != null"><a th:text="${post.user.username}" th:href="@{/users}">User</a>
+        <p th:text="${post.category}!=null? ${post.category.name}:''">Category</p>
+        <div  style="text-align: right" th:if="${post.createdAt} != null" th:text="'Created at: ' + ${#dates.format(post.createdAt, 'yyyy-MMM-dd')}"></div>
+        <div sec:authorize="isAuthenticated()">
+            <div class="row">
+                <a th:if="${!likedpostids.contains(post.id)}" th:href="@{'/like/create/post/{id}'(id=${post.id})}" class="col-md-2">
+                    <button type="button" class="btn btn-success btn-block" th:text="Like">Like</button>
+                </a>
+                <a th:if="${likedpostids.contains(post.id)}" th:href="@{'/like/delete/post/{postid}'(postid=${post.id})}" class="col-md-2">
+                    <button type="button" class="btn btn-success btn-block" th:text="Dislike">Dislike</button>
+                </a>
+                <a th:href="@{'/comment/create/{id}'(id=${post.id})}" class="col-md-2">
+                    <button type="button" class="btn btn-info btn-block" th:text="Comment">Comment</button>
+                </a>
+                <a  th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'')')} or ${currentUser}==${post.user}" th:href="@{'/blogpost/edit/{id}'(id=${post.id})}" class="col-md-2">
+                    <button type="button" class="btn btn-info btn-block" th:text="Edit">Edit</button>
+                </a>
+                <a th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'')')} or ${currentUser}==${post.user}" th:href="@{'/blogpost/delete/{id}'(id=${post.id})}" class="col-md-2">
+                    <button type="button" class="btn btn-danger btn-block" th:text="Delete">Delete</button>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!--Comments-->
+
+    <div th:if="${post.comments!= null and !post.comments.isEmpty()}"  class=" comment-width" >
+    <h2 >Comments:</h2>
+    <div class="well" th:each="comment : ${post.comments}">
+        <h4 th:text="${comment.text}">Body</h4>
+        <div><a th:text="${comment.user.username}" th:href="@{/users}">User</a>
+        </div>
+        <div style="text-align: right" th:text="'Created at: ' + ${#dates.format(comment.createdAt, 'yyyy-MMM-dd')}"></div>
+        <div sec:authorize="isAuthenticated()">
+            <div class="row">
+                <a th:if="${(!likedpostcommentids.contains(comment.id))}"
+                   th:href="@{'/like/create/comment/{id}'(id=${comment.id})}" class="col-md-2">
+                    <button type="button" class="btn btn-success btn-block" th:text="Like">Like</button>
+                </a>
+                <a th:if="${likedpostcommentids.contains(comment.id)}" th:href="@{'/like/delete/comment/{commentid}'(commentid=${comment.id})}" class="col-md-2">
+                    <button type="button" class="btn btn-success btn-block" th:text="Dislike">Dislike</button>
+                </a>
+                <a th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'')')}" th:href="@{'/comment/edit/{postid}/{id}'(id=${comment.id},postid=${post.id})}" class="col-md-2">
+                    <button type="button" class="btn btn-info btn-block" th:text="Edit">Edit</button>
+                </a>
+                <a th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'')')} or ${currentUser}==${post.user}" th:href="@{'/comment/delete/{id}'(id=${comment.id})}" class="col-md-2">
+                    <button type="button" class="btn btn-danger btn-block" th:text="Delete">Delete</button>
+                </a>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<div class="footer-container" >
+    <footer th:replace="/fragments/footer :: footer"></footer>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    function clearSearch() {
+        window.location = "[[@{/}]]";
+    }
+</script>

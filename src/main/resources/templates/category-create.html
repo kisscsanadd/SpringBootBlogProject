@@ -1,0 +1,21 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/header :: header (title='Add Category')"></div>
+<body>
+
+<div th:replace="fragments/menu :: menu (current='Categories')"></div>
+
+
+<div class="container">
+    <!--/*@thymesVar id="category" type="hu.suaf.blog.model.BlogPostCategory"*/-->
+    <form action="#" th:action="${category.id} == null ? @{/categories/create} : @{/categories/edit/{id}(id=${category.id})}" th:object="${category}" method="post" novalidate>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" th:field="*{name}">
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="${category.id != null ? 'Save' : 'Submit'}">Submit</button>
+    </form>
+</div>
+<footer th:replace="/fragments/footer :: footer"></footer>
+</body>
+</html>

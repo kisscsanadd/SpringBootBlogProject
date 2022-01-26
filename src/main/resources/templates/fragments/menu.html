@@ -1,0 +1,24 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="menu(current)" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <a class="navbar-brand" th:href="@{/blogpost}"><img class="logo" th:src="@{/images/blog_logo.png}"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a sec:authorize="isAuthenticated()" class="nav-item nav-link" th:classappend="${current} == 'Create post' ? 'active' : ''" th:href="@{/blogpost/create}">Create post</a>
+            <a class="nav-item nav-link" th:classappend="${current} == 'List' ? 'active' : ''" th:href="@{/}">Posts</a>
+            <a class="nav-item nav-link" th:classappend="${current} == 'Users' ? 'active' : ''" th:href="@{/users}">Users</a>
+            <a sec:authorize="hasAnyAuthority('ADMIN')" class="nav-item nav-link" th:classappend="${current} == 'Categories' ? 'active' : ''" th:href="@{/categories}">Categories</a>
+            <a sec:authorize="isAuthenticated()" class="nav-item nav-link" th:classappend="${current} == 'Profile' ? 'active' : ''" th:href="@{/users/edit/{id}(id=${currentUser.id})}">Profile</a>
+
+        </div>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" th:href="@{/logout}">Logout</a>
+                <a sec:authorize= "isAnonymous()" class="nav-item nav-link" th:href="@{/login}">Login</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
